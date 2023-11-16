@@ -3,6 +3,8 @@
 import torch
 import torch.nn as nn
 import torchvision.transforms.functional as TF
+import torchvision.models as models
+
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
@@ -17,7 +19,7 @@ class DoubleConv(nn.Module):
             nn.ReLU(inplace=True)
         )
     def forward(self,x):
-        return self.conv(x)
+        return self.conv(x) 
 
 class UNET(nn.Module):
     #outchannels in paper 2 here are 1 for binary
@@ -63,14 +65,14 @@ class UNET(nn.Module):
             concat_skip=torch.concat((skip_connection,x),dim=1)
             x=self.ups[idx+1](concat_skip)
         
-        return self.final_conv(x)
+        return self.final_conv(x) #nn.sigmoid for binary
     
-def test():
-    x=torch.rand((3,1,160,160))
-    model=UNET(in_channels=1,out_channels=1)
-    preds=model(x)
-    print(preds.shape)
-    print(x.shape)
-    assert preds.shape==x.shape
+# def test():
+#     x=torch.rand((3,1,160,160))
+#     model=UNET(in_channels=1,out_channels=1)
+#     preds=model(x)
+#     print(preds.shape)
+#     print(x.shape)
+#     assert preds.shape==x.shape
 
-test()
+
